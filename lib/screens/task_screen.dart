@@ -1,6 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:todoey_flutter/models/task.dart';
+import 'package:todoey_flutter/screens/add_task_screen.dart';
+import 'package:todoey_flutter/widgets/task_list.dart';
 
-class TaskScreen extends StatelessWidget {
+class TaskScreen extends StatefulWidget {
+  @override
+  _TaskScreenState createState() => _TaskScreenState();
+}
+
+class _TaskScreenState extends State<TaskScreen> {
+  List<Task> tasks = [];
+
+  void addTask(String taskTitle) {
+    setState(() {
+      tasks.add(new Task(name: taskTitle));
+    });
+    Navigator.pop(context);
+  }
+
+  void toggleDone(int index) {
+    setState(() {
+      tasks[index].toggleDone();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +75,10 @@ class TaskScreen extends StatelessWidget {
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: TasksList(),
+              child: TasksList(
+                tasks: this.tasks,
+                toggleTaskDone: this.toggleDone,
+              ),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -67,32 +93,13 @@ class TaskScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.lightBlueAccent,
         child: Icon(Icons.add),
-        onPressed: () {},
-      ),
-    );
-  }
-}
-
-class TasksList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        TaskTile(),
-        TaskTile(),
-        TaskTile(),
-      ],
-    );
-  }
-}
-
-class TaskTile extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text('This is a task'),
-      trailing: Checkbox(
-        value: false,
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (context) => AddTaskScreen(
+                    handleOnPressed: addTask,
+                  ));
+        },
       ),
     );
   }
