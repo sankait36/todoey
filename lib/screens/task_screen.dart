@@ -1,29 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:todoey_flutter/models/task.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey_flutter/models/task_data.dart';
 import 'package:todoey_flutter/screens/add_task_screen.dart';
 import 'package:todoey_flutter/widgets/task_list.dart';
 
-class TaskScreen extends StatefulWidget {
-  @override
-  _TaskScreenState createState() => _TaskScreenState();
-}
-
-class _TaskScreenState extends State<TaskScreen> {
-  List<Task> tasks = [];
-
-  void addTask(String taskTitle) {
-    setState(() {
-      tasks.add(new Task(name: taskTitle));
-    });
-    Navigator.pop(context);
-  }
-
-  void toggleDone(int index) {
-    setState(() {
-      tasks[index].toggleDone();
-    });
-  }
-
+class TaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +43,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   ),
                 ),
                 Text(
-                  '12 Tasks',
+                  '${Provider.of<TaskData>(context).taskCount} Tasks',
                   style: TextStyle(
                     fontSize: 30.0,
                     fontFamily: 'Pacifico',
@@ -75,10 +56,7 @@ class _TaskScreenState extends State<TaskScreen> {
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: TasksList(
-                tasks: this.tasks,
-                toggleTaskDone: this.toggleDone,
-              ),
+              child: TasksList(),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -95,10 +73,9 @@ class _TaskScreenState extends State<TaskScreen> {
         child: Icon(Icons.add),
         onPressed: () {
           showModalBottomSheet(
-              context: context,
-              builder: (context) => AddTaskScreen(
-                    handleOnPressed: addTask,
-                  ));
+            context: context,
+            builder: (context) => AddTaskScreen(),
+          );
         },
       ),
     );

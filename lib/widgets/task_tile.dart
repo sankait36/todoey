@@ -3,13 +3,19 @@ import 'package:flutter/material.dart';
 class TaskTile extends StatelessWidget {
   final String taskTitle;
   final bool isChecked;
+  final Function handleLongPress;
   final Function handleOnChanged;
 
-  TaskTile({this.taskTitle, this.isChecked, this.handleOnChanged});
+  TaskTile(
+      {this.taskTitle,
+      this.isChecked,
+      this.handleOnChanged,
+      this.handleLongPress});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onLongPress: handleLongPress,
       title: Text(
         taskTitle,
         style: TextStyle(
